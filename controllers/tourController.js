@@ -278,3 +278,105 @@ exports.deleteTour = async (req, res) => {
 //     data: null,
 //   });
 // };
+
+// Adding Aggregations.
+exports.getTourStats = async (req, res) => {
+  try {
+    // match stage - match ratingsAverage gte 4.5
+    // group by difficulty
+    const stats = await Tour.aggregate([
+      {
+        $match: { ratingsAverage: { $gte: 4.5 } },
+      },
+      {
+        $group: {
+          _id: { $toUpper: '$difficulty' },
+          numTours: { $sum: 1 },
+          numRatings: { $sum: '$ratingsQuantity' },
+          avgRating: { $avg: '$ratingsAverage' },
+          avgPrice: { $avg: '$price' },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' },
+        },
+      },
+      {
+        $sort: { avgPrice: 1 },
+      },
+      // can repeat stages
+      // {
+      //   $match: { _id: { $ne: 'EASY' } }
+      // }
+    ]);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        stats: stats,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
+};
+
+exports.getMonthlyPlan = async (req, res) => {
+  try {
+    const year = req.params.year * 1; // 2021
+
+    // match stage
+    const plan = await Tour.aggregate([
+      // unwind will deconstruct an array field from input documents and output one document
+      // for each element in the array.
+      {
+        $unwind: '$startDates',
+      },
+      {
+        $match: {
+          startDates: {
+            $gte: new Date(`${year}-01-01`),
+            $lte: new Date(`${year}-12-31`),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { $month: '$startDates' },
+          numTourStarts: { $sum: 1 },
+          tours: { $push: '$name' },
+        },
+      },
+      // add a field called month which was set to the month
+      {
+        $addFields: { month: '$_id' },
+      },
+      // get rid of _id
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+      // sort descending order
+      {
+        $sort: { numTourStarts: -1 },
+      },
+      {
+        $limit: 12,
+      },
+    ]);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        plan: plan,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
+};
