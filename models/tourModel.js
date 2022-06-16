@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 
+// How to use validator library.
 // const validator = require('validator');
 
 // Data Validation is in the Model.
@@ -14,6 +15,7 @@ const tourSchema = new mongoose.Schema(
       trim: true,
       maxlength: [40, 'A tour name must have less or equal then 40 characters'],
       minlength: [10, 'A tour name must have more or equal then 10 characters'],
+      // will not use it here because spaces are not allowed with isAlpha.
       // validate: [validator.isAlpha, 'Tour name must only contain characters']
     },
     slug: String,
