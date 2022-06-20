@@ -126,6 +126,14 @@ tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
 
+// Virtual populate - in review model the tour field stores the tourid.
+//  _id is the local model.
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
+});
+
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
 // this is the current document being processed.
 // need slug in the schema and slug will be based on tour name.
