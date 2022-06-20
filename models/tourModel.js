@@ -107,6 +107,12 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
+    guides: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
@@ -128,6 +134,37 @@ tourSchema.pre('save', function (next) {
   // calls next middleware
   next();
 });
+
+// Populates tour guide with query middleware.
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt',
+  });
+
+  next();
+});
+
+// Implementing embedding for the users stored in the guides - this is only for creating
+// not updating.
+// Loop thru the guides and get users.
+// tourSchema.pre('save', async function(next) {
+//   const guidesPromises = this.guides.map(async id => await User.findById(id));
+//   The async function returns promise so you get an array of promises.
+//   Now we need to run all the promises.
+//   this.guides = await Promise.all(guidesPromises);
+//   next();
+// });
+
+// tourSchema.pre('save', function(next) {
+//   console.log('Will save document...');
+//   next();
+// });
+
+// tourSchema.post('save', function(doc, next) {
+//   console.log(doc);
+//   next();
+// });
 
 // tourSchema.pre('save', function(next) {
 //   console.log('Will save document...');

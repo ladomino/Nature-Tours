@@ -139,6 +139,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 exports.getTour = catchAsync(async (req, res, next) => {
   // same functionality
   const tour = await Tour.findById(req.params.id);
+
   // Tour.findOne({ _id: req.params.id })
 
   // if there is no tour return 404 not found.
