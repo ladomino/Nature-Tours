@@ -11,18 +11,20 @@ The course also reviews complete coding techniques.
 Techniques include:  
 1.  Using a RESTFUL API
 2.  MVC architecture
-3.  Query String Handling
-4.  Data Aggregation
-5.  Express Middleware
-6.  Mongoose Middleware - Document, Query and Aggregate functions.
-7.  JSON Web Tokens for Authentication
-8.  Authorization, user roles, and protected routes
-9.  Error Handling Layer for Development vs Production and Express, Mongooose and
+3.  Mongo Date Modeling:  Normalizing, DeNormalizing, Types of Referencing.
+    Geospatial data, Embedding vs Child Referencing.
+4.  Query String Handling
+5.  Data Aggregation
+6.  Express Middleware
+7.  Mongoose Middleware - Document, Query and Aggregate functions.
+8.  JSON Web Tokens for Authentication
+9.  Authorization, user roles, and protected routes
+10.  Error Handling Layer for Development vs Production and Express, Mongooose and
     general handling.  A necessity for any developer to know how to do this.
-10.  Testing out everything on PostMan.
-11. Using NDB Debugger.
-12. Setting up MongoDB Locally and on Atlas.
-13. Using MongoDB Command Terminal and Compass and on Atlas.
+11. Testing out everything on PostMan.
+12. Using NDB Debugger.
+13. Setting up MongoDB Locally and on Atlas.
+14. Using MongoDB Command Terminal and Compass and on Atlas.
 
 
 Once the app is completed it will be deployed on Heroku and use Mongo Atlas for

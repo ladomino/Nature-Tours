@@ -33,7 +33,7 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-/ Body parser, reading data from body into req.body
+// Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
 
 // No longer necessary.
@@ -49,7 +49,7 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // Prevent parameter pollution - clears up the query string from unwanted parameters.
-// whitelist is an array where we allow duplicates.
+// whitelist is an array where we allow duplicates.4
 app.use(
   hpp({
     whitelist: [
