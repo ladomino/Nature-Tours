@@ -34,6 +34,7 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+// Compound index.
 reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
 
 reviewSchema.pre(/^find/, function (next) {
@@ -53,7 +54,13 @@ reviewSchema.pre(/^find/, function (next) {
   next();
 });
 
+// Each time a new review is added we calculate the average rating.
+// Then we update the document.
 reviewSchema.statics.calcAverageRatings = async function (tourId) {
+  // Use the aggregation pipeline.
+  // this points to the current model.  Pass in an array that we need for
+  // aggregate.  First we match using tourId that we want to update.
+  // Group phase.  This returns a promise so we must await and store in stats.
   const stats = await this.aggregate([
     {
       $match: { tour: tourId },
@@ -81,11 +88,15 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
   }
 };
 
+// Do not use pre here.
 reviewSchema.post('save', function () {
   // this points to current review
   this.constructor.calcAverageRatings(this.tour);
 });
 
+// query middleware - so let's excute findOne and see if we can access
+// the document.  We don't want to update the ratings here because the
+// average has not been updated.  post will consume this.r  
 // findByIdAndUpdate
 // findByIdAndDelete
 reviewSchema.pre(/^findOneAnd/, async function (next) {
@@ -94,6 +105,7 @@ reviewSchema.pre(/^findOneAnd/, async function (next) {
   next();
 });
 
+// query finished, document has been updated.
 reviewSchema.post(/^findOneAnd/, async function () {
   // await this.findOne(); does NOT work here, query has already executed
   await this.r.constructor.calcAverageRatings(this.r.tour);

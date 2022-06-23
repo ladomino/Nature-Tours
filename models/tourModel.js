@@ -121,7 +121,11 @@ const tourSchema = new mongoose.Schema(
 );
 
 // tourSchema.index({ price: 1 });
+// ratingsAverage is in descending order.
+// when you create a compound index you don't need an index on just the one field.
 tourSchema.index({ price: 1, ratingsAverage: -1 });
+
+// want the unique slug for queries on tours.
 tourSchema.index({ slug: 1 });
 tourSchema.index({ startLocation: '2dsphere' });
 
