@@ -11,6 +11,7 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
+// Middleware before calling getOne.
 exports.getMe = (req, res, next) => {
   req.params.id = req.user.id;
   next();
@@ -63,6 +64,6 @@ exports.createUser = (req, res) => {
 exports.getUser = factory.getOne(User);
 exports.getAllUsers = factory.getAll(User);
 
-// Do NOT update passwords with this!
+// Do NOT update passwords with this!  Update user is for administrators.
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
