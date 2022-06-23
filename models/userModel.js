@@ -51,28 +51,28 @@ const userSchema = new mongoose.Schema({
 });
 
 // Pre middleware on save.  Encryption should run here before the save.
-userSchema.pre('save', async function (next) {
-  // Only run this function if password was actually modified or is new.
-  if (!this.isModified('password')) return next();
+// userSchema.pre('save', async function (next) {
+//   // Only run this function if password was actually modified or is new.
+//   if (!this.isModified('password')) return next();
 
-  // Use the asynchronous version.
-  // Hash the password with cost of 12
-  this.password = await bcrypt.hash(this.password, 12);
+//   // Use the asynchronous version.
+//   // Hash the password with cost of 12
+//   this.password = await bcrypt.hash(this.password, 12);
 
-  // Delete passwordConfirm field
-  //  we don't want this in the DB so we will get rid of it.
-  //  Set it to undefined.  Remember it is a Required input but not the
-  //  Db.
-  this.passwordConfirm = undefined;
-  next();
-});
+//   // Delete passwordConfirm field
+//   //  we don't want this in the DB so we will get rid of it.
+//   //  Set it to undefined.  Remember it is a Required input but not the
+//   //  Db.
+//   this.passwordConfirm = undefined;
+//   next();
+// });
 
-userSchema.pre('save', function (next) {
-  if (!this.isModified('password') || this.isNew) return next();
+// userSchema.pre('save', function (next) {
+//   if (!this.isModified('password') || this.isNew) return next();
 
-  this.passwordChangedAt = Date.now() - 1000;
-  next();
-});
+//   this.passwordChangedAt = Date.now() - 1000;
+//   next();
+// });
 
 userSchema.pre(/^find/, function (next) {
   // this points to the current query
